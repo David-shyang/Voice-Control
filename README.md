@@ -58,8 +58,9 @@ This is a car make for Meal Delivery, which can go through the route that been s
 - PC to write the code onto the board
 
 This is the car been assambled 
+![whole_car][10]
 
-![wearable_node][3]
+![whole_car_2][11]
 
 ### Required Software
 - embarc_osp
@@ -291,6 +292,8 @@ Placing the C source file and header file in the corresponding subfolder.
 [7]: ./doc/pic/code_struction_2.png 			  "system_architecture_2"
 [8]: ./doc/pic/code-interr.png 			  "code-interr"
 [9]: ./doc/pic/controller.png 			  "controller"
+[10]: ./doc/pic/whole_car.png 			  "whole_car"
+[11]: ./doc/pic/whole_car_2.png 			  "whole_car_2"
 
 
 
