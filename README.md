@@ -70,6 +70,8 @@ This is the car been assambled
 ### Hardware Connection
 Connect the IOTDK through micor USB to write the code.
 And the wires connection is down below.
+![hardware_connect][12]
+![power][13]
 
 ## User Manual
 ### Before Running This Application
@@ -293,7 +295,9 @@ Placing the C source file and header file in the corresponding subfolder.
 [8]: ./doc/pic/code-interr.png 			  "code-interr"
 [9]: ./doc/pic/controller.png 			  "controller"
 [10]: ./doc/pic/whole_car.png 			  "whole_car"
-[11]: ./doc/pic/whole_car_2.png 			  "whole_car_2"
+[11]: ./doc/pic/whole_car_2.png 			"whole_car_2"
+[12]: ./doc/pic/hardware_connect.png 		"hardware_connect"
+[13]: ./doc/pic/power.png 		"power"
 
 
 
