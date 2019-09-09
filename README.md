@@ -34,11 +34,14 @@ This is a car make for Meal Delivery, which can go through the route that been s
 
 ### System Architecture
 
-![system_architecture][1]
+![system_architecture][1]    
+![system_architecture_2][7]
+**Timer interrupt**
+![code-interr][8]
 
 ### Control Method
 
-![freeboard_ui][2]
+![controlleri][2]
 
 ## Hardware and Software Setup
 ### Required Hardware
@@ -280,11 +283,15 @@ Placing the C source file and header file in the corresponding subfolder.
 
 [0]: ./doc/pic/all.png         "all-sys"
 [1]: ./doc/pic/code_structure.png    "system_architecture"
-[2]: ./doc/screenshots/freeboard_ui.png           "freeboard_ui"
+[2]: ./doc/pic/controller.png 			  "controller"
 [3]: ./doc/screenshots/wearable_node.jpg          "wearable_node"
 [4]: ./doc/screenshots/wifi_connected_info.PNG    "wifi_connected_info"
 [5]: ./doc/screenshots/lwm2m_started_info.PNG     "lwm2m_started_info"
 [6]: ./doc/screenshots/lamp_work_info.PNG         "lamp_work_info"
+[7]: ./doc/pic/code_struction_2.png 			  "system_architecture_2"
+[8]: ./doc/pic/code-interr.png 			  "code-interr"
+[9]: ./doc/pic/controller.png 			  "controller"
+
 
 
 [30]: https://embarc.org/embarc_osp/doc/build/html/board/iotdk.html    "v"
