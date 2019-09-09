@@ -30,7 +30,7 @@ This is a car make for Meal Delivery, which can go through the route that been s
 - **Front Detection** (There are two distance detecter to stop the car from accidentally crash into something)
 - **Controller based**(Through improving the Controller we can make the car move more smoothly and precisely)
 
-![ibaby_function][0]
+![all-sys][0]
 
 ### System Architecture
 
@@ -278,8 +278,8 @@ Placing the C source file and header file in the corresponding subfolder.
 		62   extern lwm2m_object_t * get_lamp_object();
 
 
-[0]: ./doc/pic/all.png         "ibaby_function"
-[1]: ./doc/screenshots/system_architecture.PNG    "system_architecture"
+[0]: ./doc/pic/all.png         "all-sys"
+[1]: ./doc/pic/code_structure.png    "system_architecture"
 [2]: ./doc/screenshots/freeboard_ui.png           "freeboard_ui"
 [3]: ./doc/screenshots/wearable_node.jpg          "wearable_node"
 [4]: ./doc/screenshots/wifi_connected_info.PNG    "wifi_connected_info"
