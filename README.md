@@ -278,7 +278,7 @@ Placing the C source file and header file in the corresponding subfolder.
 		62   extern lwm2m_object_t * get_lamp_object();
 
 
-[0]: ./doc/pic/all.PNG         "ibaby_function"
+[0]: ./doc/pic/all.png         "ibaby_function"
 [1]: ./doc/screenshots/system_architecture.PNG    "system_architecture"
 [2]: ./doc/screenshots/freeboard_ui.png           "freeboard_ui"
 [3]: ./doc/screenshots/wearable_node.jpg          "wearable_node"
