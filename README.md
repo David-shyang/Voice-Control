@@ -12,12 +12,6 @@ This is a car make for Meal Delivery, which can go through the route that been s
 * [User Manual](#user-manual)
 	* [Before Running This Application](#before-running-this-application)
 	* [Run This Application](#run-this-application)
-	* [Add a New Node](#add-a-new-node)
-		* [Makefile](#makefile)
-		* [Main Entry](#main-entry)
-		* [Driver](#driver)
-		* [Function Module](#function-module)
-		* [LwM2M Client](#lwm2m-client)
 
 ## Introduction
 **Voice Control Meal Delivery**
@@ -51,6 +45,7 @@ This is a car make for Meal Delivery, which can go through the route that been s
 - 1 2S 10A 18650 Lithium Battery Protection Board
 - 1 XL6009 Boost Buck DC Adjustable Step Up Down Converter
 - 1 L298N DC Motor Driver Dual H Bridge
+- 1 SPH0645LM4H I2S Microphone
 - 2 Motor with Hall Sensor 
 - 2 HC-SR04 Ultrasonic Distance Rangefinder
 - 1 NodeMCU ESP8266 Lua WiFi Internet Development Board
@@ -75,213 +70,28 @@ And the wires connection is down below.
 
 ## User Manual
 ### Before Running This Application
-Firstly, download source code of **iBaby Smarthome Gateway** and **iBaby Freeboard UI** from github. Then you need an AWS account, and create things for ibaby Gateway, generate and save the certs for it, and modify specific `config.js`(path: `./ibaby_smarthome_gateway/config.js`) for your project.
+You have to download thw embarc_ops and install the IDE and Driver, and download the code from the github,but because the voice recognition model is from **Cyberon** so you have to get licence from it. 
 
-Secondly, run the iBaby Smarthome Gateway, open the browser and type IP address of the Gateway to access user interface. You can push iBaby Freeboard UI to github so that it can support remote access data.
+And set up the environment by follow the [guide][31].
+To use NodeMCU, you have to set up the arduino IDE according to your NodeMCU WiFi board version.
 
-|  EMSK Implemented Node   |    AWS IoT Thing      |     Source Folder      |
-| ------------------------ | --------------------- | ---------------------- |
-|      wearable node       |        ibaby          |   src/wearable_node    |
-|      lamp node           |        ibaby          |   src/lamp_node        |
-
-The hardware resources are allocated as following table.
-
-|  Hardware Resource  |            Function                                           |
-| ------------------- | ------------------------------------------------------------- |
-|  MPU6050            |        Acceleration sensor                                    |
-|  MAX30102           |        Heartrate sensor                                       |
-|  MLX90614           |        Body temperature sensor                                |
-|  PMOD WiFi          |        Provide WiFi Connection                                |
+And download the **wifi** folder for NodeMCU WiFi module.
 
 ### Run This Application
 
-Modify the settings for connecting to the LwM2M Server(Gateway), as shown below:
+Under Win10, put **voice** folder in the embarc_osp(from the synopsys or the [link][31]) open powershell at the voice folder,
 
-(path: `src/wearable_node/function/lwm2m/lwm2m.c`):
+(path: `embarc_osp/voice`):
 
-		const static char *p_port   = (char *)"5683";    /* lwm2mServer's port and IP */
-		const static char *p_server = (char *)"192.168.43.199";
-		const static char *p_client_name = (char *)"wn"; /* name of lwm2m client node */
+		make BOARD=iotdk TOOLCHAIN=gnu run
+![screenshot_powershell][14]
 
-(path: `src/lamp_node/function/lwm2m/lwm2m.c`):
+And you can see some recognition result with putty through serial port.
 
-		const static char *p_port   = (char *)"5683";    /* lwm2mServer's port and IP */
-		const static char *p_server = (char *)"192.168.43.199";
-		const static char *p_client_name = (char *)"ln"; /* name of lwm2m client node */
+![putty][15]
 
-Here take **EMSK2.2 - ARC EM11D** with Metaware Toolset for example to show how to run this application.
 
-1. We need to use embARC 2nd bootloader to automatically load application binary for different EMSK and run. See *embARC Secondary Bootloader Example* for reference.
 
-2. Open your serial terminal such as Tera-Term on PC, and configure it to right COM port and *115200bps*.
-
-3. Interact using EMSK and Freeboard.
-
-### Add a New Node
-
-See **Lamp Node** for reference. It's complete and very helpful to learn how to add a new node to iBaby System although it seems very simple.
-
-|  folder/file        |            Function                                           |
-| ------------------- | ------------------------------------------------------------- |
-|  driver             |        source code of drivers                                 |
-|  function           |        source code of function modules                        |
-|  lwm2m_client       |        source code of LwM2M Client                            |
-|  FreeRTOSConfig.h   |        header file of FreeRTOS configurations                 |
-|  main.c             |        main entry of embARC Application                       |
-|  makefile           |        Makefile of embARC Application                         |
-
-#### Makefile
-
-- Selected FreeRTOS here, then you can use [FreeRTOS API][39] in your application:
-
-		# Selected OS
-		OS_SEL ?= freertos
-
-- Target options about EMSK and toolchain:
-
-		BOARD ?= emsk
-		BD_VER ?= 22
-		CUR_CORE ?= arcem11d
-		TOOLCHAIN ?= gnu
-
-- Reset the heap and stack size for LwM2M, make sure they are big enough for your application:
-
-		##
-		# HEAP & STACK SETTINGS
-		# For LwM2M Stack Usage
-		##
-		HEAPSZ ?= 81920
-		STACKSZ ?= 81920
-
-- The relative series of the root directory, here the path of the Makefile is `./embarc_osp/application/ibaby_smarthome_multinode/src/lamp_node/makefile`:
-
-		#
-		# root dir of embARC
-		#
-		EMBARC_ROOT = ../../../..
-
-- The middleware used in your application:
-
-		MID_SEL = common lwip-contrib wakaama fatfs lwip
-
-	*common* for baremetal function, *lwip*, *lwip-contrib* and *wakaama* for LwM2M, *fatfs* for file system .
-
-	You might be wondering about **how wifi works?** There is nothing about it in the lamp node or wearable node application. Goto `./embarc_osp/board/board.c`, and you'll solve the problem:
-
-		#if defined(OS_FREERTOS) && defined(MID_LWIP)
-		static void task_wifi(void *par)
-		{
-		...
-		}
-
-	Wifi works as a independent task on the FreeRTOS, so you ought to select *freertos* for OS_SEL and include *lwip* in the MID_SEL. Then, the task for wifi will start to work automatically.
-
-	![wifi_connected_info][4]
-
-- Directories of source files and header files, notice that it **is not recursive**:
-
-		# application source dirs
-		APPL_CSRC_DIR = . ./lwm2m_client ./driver/acceleration ./driver/body_temperature ./driver/heartrate ./driver/timer ./function/ ./function/lwm2m ./function/print_msg ./function/process_acc ./function/process_hrate
-		APPL_ASMSRC_DIR = .
-
-		# application include dirs
-		APPL_INC_DIR = . ./lwm2m_client ./driver/acceleration ./driver/body_temperature ./driver/heartrate ./driver/timer ./function/ ./function/lwm2m ./function/print_msg ./function/process_acc ./function/process_hrate
-
-See [ embARC Example User Guide][40], **"Options to Hard-Code in the Application Makefile"** for more detailed information about **Makefile Options**.
-
-#### Main Entry
-
-- Firstly, initializing the hardware, such as buttons on the emsk and GPIO interface for lamp.
-
-- Secondly, try to start LwM2M Client. Before that, modify the ssid and password of WIFI AP in `./embarc_osp/board/emsk/emsk.h`:
-
-		143 #define WF_HOTSPOT_NAME             "embARC"
-		    #define WF_HOTSPOT_PASSWD           "qazwsxedc"
-
-	You ought to modify the flag of WIFI module selection if you are using **RW009** not MRF24G, in `./embarc_osp/board/board.mk`:
-
-		16 WIFI_SEL ?= 1
-
-	![lwm2m_started_info][5]
-
-- Finally, starting to run the function moudles. Reading value from sensors, processing it and controlling someting to work according to the results, just like the **wearable node** and **lamp node** do.
-
-	![lamp_work_info][6]
-
-#### Driver
-
-Placing the drivers' source code in `driver` folder, you can see there are subfolders for button and lamp drivers.
-Placing the C source file and header file in the corresponding subfolder.
-
-|  folder/file        |            Function           |
-| ------------------- | ------------------------------|
-|  btn                |        button driver          |
-|  lamp               |        lamp driver            |
-
-#### Function Module
-
-- The `function` folder contains the API implementations of functions.
-
-	|  folder/file        |            Function                                         |
-	| ------------------- | ------------------------------------------------------------|
-	|  lamp_work          |        lamp controller                                      |
-	|  lwm2m              |        LwM2M Client start to work                           |
-	|  print_msg          |        print out message for debug                          |
-	|  common.h           |        common variables, settings and reported data         |
-
-- In the `common.h`, set 1 to enable corresponding function, set 0 to disable.
-
-		/**
-		 * \name    macros for settings
-		 * @{
-		 */
-		#define LWM2M_CLIENT      (1) /*!< set 1 to be lwm2m client */
-	
-		#define PRINT_DEBUG_FUNC  (1) /*!< set 1 to print out message for debug major function */
-		/** @} end of name */
-
-#### LwM2M Client
-
-- In the `lwm2m_client` folder, you can see several files about LwM2M. See [**LwM2M Protocol**][37] and [**LwM2M Object and Resource**][38] to learn more about it.
-
-- The following objects are nessary, you ought to keep them:
-
-	|  file                         |
-	| ----------------------------- |
-	|  object_connectivity_stat.c   |
-	|  object_device.c              |
-	|  object_firmware.c            |
-	|  object_security.c            |
-	|  object_server.c              |
-
-- Only the `object_flag_lamp_work.c` is custom here, you ought to remove it and add the new object definition files for your node. Then, modify `lwm2mclient.c`:
-
-	The number of objects in your node:
-
-		87 #define OBJ_COUNT 7
-
-	Logic of reporting data to LwM2M Server:
-
-		346 /* update the flag of lamp working value */
-	            if (data_report_ln.flag_lamp_work != data_report_ln_old.flag_lamp_work)
-		    {
-			    lwm2m_stringToUri("/3311/0/5850", 12, &uri);
-			    valueLength = sprintf(value, "%d", data_report_ln.flag_lamp_work);
-			    handle_value_changed(context, &uri, value, valueLength);
-			    data_report_ln_old.flag_lamp_work = data_report_ln.flag_lamp_work;
-		    }
-	
-	Register custom objects:
-	
-		667 objArray[5] = get_lamp_object();
-		    if (NULL == objArray[5]) {
-			    EMBARC_PRINTF("Failed to create lamp object\r\n");
-			    return -1;
-		    }
-	
-	Finally, modify `lwm2mclient.h`:
-	
-		62   extern lwm2m_object_t * get_lamp_object();
 
 
 [0]: ./doc/pic/all.png         "all-sys"
@@ -298,11 +108,12 @@ Placing the C source file and header file in the corresponding subfolder.
 [11]: ./doc/pic/whole_car_2.png 			"whole_car_2"
 [12]: ./doc/pic/hardware_connect.png 		"hardware_connect"
 [13]: ./doc/pic/power.png 		"power"
-
+[14]: ./doc/pic/screenshot_powershell.PNG 		"screenshot_powershell"
+[15]: ./doc/pic/putty.PNG 		"putty"
 
 
 [30]: https://embarc.org/embarc_osp/doc/build/html/board/iotdk.html    "v"
-[31]:     "Li-ion Battery 18650 3.7v"
+[31]: https://embarc.org/embarc_osp/doc/build/html/getting_started/getting_started.html
 [32]: https://www.invensense.com/products/motion-tracking/6-axis/mpu-6050/    "Acceleration sensor(MPU6050)"
 [33]: http://www.electronics-lab.com/max30102/    "Heartrate sensor(MAX30102)"
 [34]: https://developer.mbed.org/components/MLX90614-I2C-Infrared-Thermometer/    "Temperature sensor(MLX90614)"
