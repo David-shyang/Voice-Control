@@ -108,7 +108,7 @@ And you can see some recognition result with putty through serial port.
 [11]: ./doc/pic/whole_car_2.png 			"whole_car_2"
 [12]: ./doc/pic/hardware_connect.png 		"hardware_connect"
 [13]: ./doc/pic/power.png 		"power"
-[14]: ./doc/pic/screenshot_powershell.PNG 		"screenshot_powershell"
+[14]: ./doc/pic/powershell.PNG 		"screenshot_powershell"
 [15]: ./doc/pic/putty.PNG 		"putty"
 
 
