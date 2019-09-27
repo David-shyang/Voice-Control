@@ -79,7 +79,7 @@ And download the **wifi** folder for NodeMCU WiFi module.
 
 ### Run This Application
 
-Under Win10, put **voice** folder in the embarc_osp(from the synopsys or the [link][31]) open powershell at the voice folder,
+Under Win10, put **src/voice** folder in the embarc_osp(from the synopsys or the [link][31]) open powershell at the voice folder,
 
 (path: `embarc_osp/voice`):
 
